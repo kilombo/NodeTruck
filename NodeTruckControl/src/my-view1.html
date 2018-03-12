@@ -66,6 +66,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>Control the NodeTruck</h1>
       <h2 id="moveTitle">{{moveOrder}}</h2>
       <paper-button raised class="red" on-tap="handleClick">Ask working</paper-button>
+      <paper-button raised class="red" on-tap="removeWorkingRequests">Remove working requests</paper-button>
     <ul>
       <template is="dom-repeat" items="{{workingResponses}}">
         <li>{{item.date}}</li>
@@ -119,6 +120,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.moveOrder = "parar";
         var d = new Date();
         this.workingRequest = d.toString();
+      }
+      // TODO: Remove working req
+      removeWorkingRequests(){
+        console.log('TODO: Remove working req');
       }
       _changeMove(value) {
         this.moveOrder = value;
