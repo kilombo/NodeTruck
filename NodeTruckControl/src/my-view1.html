@@ -1,0 +1,166 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymerfire/polymerfire.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="my-view1">
+  <template is="dom-bind">
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+      #dynamic {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+      }
+      .video-frame{
+        position: fixed;
+        bottom:0;
+        right:0;
+        width: 50%;
+        height:50%;
+        max-width: 608px;
+        max-height:456px;
+      }
+      paper-button.red {
+        background: red;
+        color: white;
+        font-size: 12px;
+      }
+    </style>
+    <firebase-app
+      auth-domain="nodetruck.firebaseapp.com"
+      database-url="https://nodetruck.firebaseio.com"
+      api-key="AIzaSyCX5NZ7AUIyFZHyIV2fcxdoLHxksXtXkGU">
+    </firebase-app>
+    <firebase-document
+      id="fbDoc"
+      path="/move_orders/move"
+      data="{{moveOrder}}">
+    </firebase-document>
+    <firebase-document
+      path="/working_requests/date"
+      data="{{workingRequest}}">
+    </firebase-document>
+    <firebase-query
+      path="/working_responses"
+      data="{{workingResponses}}">
+    </firebase-query>
+
+    <div class="card">
+      <h1>Control the NodeTruck</h1>
+      <h2 id="moveTitle">{{moveOrder}}</h2>
+      <paper-button raised class="red" on-tap="handleClick">Ask working</paper-button>
+    <ul>
+      <template is="dom-repeat" items="{{workingResponses}}">
+        <li>{{item.date}}</li>
+      </template>
+</ul>
+      <div id="dynamic"></div>
+    </div>
+  </template>
+
+  <script>
+    class MyView1 extends Polymer.Element {
+      static get is() {
+        return 'my-view1';
+      }
+      static get properties() {
+        return {
+          moveOrder: {
+            type: String,
+            // Observer method identified by name
+            observer: '_moveOrderObserver',
+          },
+          workingRequest: {
+            type: String,
+            // Observer method identified by name
+            observer: '_workingRequestObserver',
+          },
+          workingResponses: {
+            type: Array,
+            observer: '_workingResponsesObserver',
+          },
+          dynamic: {
+            type: Object,
+            value: {}
+          }
+        }
+      }
+      // Observer method defined as a class method
+      _moveOrderObserver(newValue, oldValue) {
+        console.log(oldValue);
+        console.log(newValue);
+      }
+      // Observer method defined as a class method
+      _workingRequestObserver(newValue, oldValue) {
+        //console.log(oldValue);
+        console.log(newValue);
+      }
+      _workingResponsesObserver(){
+        console.log(this.workingResponses);
+      }
+      handleClick() {
+        this.moveOrder = "parar";
+        var d = new Date();
+        this.workingRequest = d.toString();
+      }
+      _changeMove(value) {
+        this.moveOrder = value;
+      }
+      ready() {
+        super.ready();
+        this.moveOrder = "ready";
+        this.dynamic = nipplejs.create({
+          zone: this.$.dynamic,
+          color: 'blue'
+        });
+
+        this.dynamic.on('dir:up', (evt) => {
+          console.log('dir:up');
+          this.moveOrder = 'avanzar';
+          console.log(this.moveOrder);
+        });
+        this.dynamic.on('dir:right', (evt) => {
+          console.log('dir:right');
+          this.moveOrder = 'derecha';
+          console.log(this.moveOrder);
+        });
+        this.dynamic.on('dir:down', (evt) => {
+          console.log('dir:down');
+          this.moveOrder = 'retroceder';
+          console.log(this.moveOrder);
+        });
+        this.dynamic.on('dir:left', (evt) => {
+          console.log('dir:left');
+          this.moveOrder = 'izquierda';
+          console.log(this.moveOrder);
+        });
+        this.dynamic.on('end', (evt) => {
+          console.log('STOP');
+          this.moveOrder = 'parar';
+          console.log(this.moveOrder);
+        });
+      }
+    }
+
+    window.customElements.define(MyView1.is, MyView1);
+  </script>
+  <script>
+  </script>
+</dom-module>
