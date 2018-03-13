@@ -2,6 +2,8 @@ import '@ionic/core';
 import '@stencil/core';
 import { Component, Prop, Listen } from '@stencil/core';
 import { ToastController } from '@ionic/core';
+import { firebaseConfig } from '../../helpers/config';
+import firebase from 'firebase';
 
 @Component({
   tag: 'my-app',
@@ -11,13 +13,22 @@ export class MyApp {
 
   @Prop({ connect: 'ion-toast-controller' }) toastCtrl: ToastController;
 
+  configureFirebase() {
+    firebase.initializeApp(firebaseConfig);
+    console.log('Firebase Configured!', firebase);
+  }
+
+  componentWillLoad() {
+    this.configureFirebase();
+  }
+
   componentDidLoad() {
     /*
       Handle service worker updates correctly.
       This code will show a toast letting the
-      user of the PWA know that there is a 
+      user of the PWA know that there is a
       new version available. When they click the
-      reload button it then reloads the page 
+      reload button it then reloads the page
       so that the new service worker can take over
       and serve the fresh content
     */

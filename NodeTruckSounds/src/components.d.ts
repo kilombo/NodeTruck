@@ -78,6 +78,36 @@ declare global {
 
 
 import {
+  FirebaseSounds as FirebaseSounds
+} from './components/firebase-sounds/firebase-sounds';
+
+declare global {
+  interface HTMLFirebaseSoundsElement extends FirebaseSounds, HTMLStencilElement {
+  }
+  var HTMLFirebaseSoundsElement: {
+    prototype: HTMLFirebaseSoundsElement;
+    new (): HTMLFirebaseSoundsElement;
+  };
+  interface HTMLElementTagNameMap {
+    "firebase-sounds": HTMLFirebaseSoundsElement;
+  }
+  interface ElementTagNameMap {
+    "firebase-sounds": HTMLFirebaseSoundsElement;
+  }
+  namespace JSX {
+    interface IntrinsicElements {
+      "firebase-sounds": JSXElements.FirebaseSoundsAttributes;
+    }
+  }
+  namespace JSXElements {
+    export interface FirebaseSoundsAttributes extends HTMLAttributes {
+      
+    }
+  }
+}
+
+
+import {
   LazyImg as LazyImg
 } from './components/lazy-img/lazy-img';
 
