@@ -1,4 +1,4 @@
-import { Component, State } from '@stencil/core';
+import { Component, State, Event, EventEmitter, Listen } from '@stencil/core';
 import firebase from 'firebase';
 
 @Component({
@@ -8,6 +8,12 @@ import firebase from 'firebase';
 export class FirebaseSounds {
 
   @State() engineStatus: string;
+  @Event() playSoundEvent: EventEmitter;
+  @Listen('playSoundEvent')
+  playSoundEventHandler() {
+    console.log('Received the custom playSoundEvent event.');
+    this.playSound('horn','start');
+  }
 
   componentDidLoad() {
     const hornRef = firebase.database().ref('horn/status');
@@ -15,6 +21,7 @@ export class FirebaseSounds {
       console.log('horn status: ', snapshot.val());
       if(snapshot.val() === 'on'){
         this.playSound('horn','start');
+        this.playSoundEvent.emit();
       }
       if(snapshot.val() === 'off'){
         this.playSound('horn','stop');
@@ -38,6 +45,7 @@ export class FirebaseSounds {
 
   playSound(soundName:string, action:string){
     console.log('playing sound ...');
+    // http://soundbible.com/tags-truck.html
     let audio = new Audio(`../assets/sounds/${soundName}.mp3`);
     if(soundName === 'idle'){
       audio.loop = true;
@@ -52,7 +60,10 @@ export class FirebaseSounds {
 
   render() {
     return (
-      <p>FirebaseSounds</p>
+      <div>
+        <p>FirebaseSounds Events</p>
+        <ion-button onClick={() => this.playSound('horn','start')} expand='block' color='primary'>Test</ion-button>
+      </div>
     );
   }
 }
