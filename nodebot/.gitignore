@@ -12,6 +12,7 @@ log.txt
 .vscode/
 .versions/
 node_modules/
+bower_components/
 $RECYCLE.BIN/
 
 .DS_Store
