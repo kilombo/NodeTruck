@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "nodetruck"
+    "default": "nodetruck",
+    "testing": "testing-38514"
   }
 }

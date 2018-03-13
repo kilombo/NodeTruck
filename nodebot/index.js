@@ -45,8 +45,9 @@ board.on("ready", function() {
 
 var listenEvent = function() {
   dbref_move_orders.on('value', function(snapshot) {
-    // Blue Led
-    //b = new five.Led(13);
+    // Front Led
+    var frontLed = new five.Led(2);
+    // https://github.com/rwaldron/johnny-five/wiki/Motor#adafruit-motorstepperservo-shield-v1
     var configs = five.Motor.SHIELD_CONFIGS.ADAFRUIT_V1;
     var motor1 = new five.Motor(configs.M1);
     var motor2 = new five.Motor(configs.M2);
@@ -55,7 +56,7 @@ var listenEvent = function() {
     switch (movement.move) {
       case "avanzar":
         console.log("Going front");
-        //b.on();
+        frontLed.on();
         motor1.forward(255);
         motor2.forward(255);
         break;
@@ -63,23 +64,23 @@ var listenEvent = function() {
         console.log("Going right");
         motor2.forward(200);
         motor1.stop();
-        //b.on();
+        frontLed.on();
         break;
       case "retroceder":
         console.log("Going reverse");
         motor1.reverse(255);
         motor2.reverse(255);
-        //b.on();
+        frontLed.on();
         break;
       case "izquierda":
         console.log("Going left");
         motor1.forward(200);
         motor2.stop();
-        //b.on();
+        frontLed.on();
         break;
       case "parar":
         console.log("STOP");
-        //b.off();
+        frontLed.off();
         motor1.stop();
         motor2.stop();
         break;
@@ -89,7 +90,7 @@ var listenEvent = function() {
       //   break;
       default:
         console.log("STOP");
-        //b.off();
+        frontLed.off();
         motor1.stop();
         motor2.stop();
     }
