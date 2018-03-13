@@ -12,7 +12,7 @@ export class AppHome {
       <ion-page>
         <ion-header>
           <ion-toolbar color='primary'>
-            <ion-title>Ionic PWA Toolkit</ion-title>
+            <ion-title>NodeTruck</ion-title>
           </ion-toolbar>
         </ion-header>
 
