@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>NodeTruck</title>
@@ -21,9 +22,94 @@
   <link rel="icon" type="image/x-icon" href="/assets/icon/favicon.ico">
   <link rel="manifest" href="/manifest.json">
 </head>
+
 <body>
 
   <my-app></my-app>
+  <script src="https://www.gstatic.com/firebasejs/4.10.1/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCX5NZ7AUIyFZHyIV2fcxdoLHxksXtXkGU",
+      authDomain: "nodetruck.firebaseapp.com",
+      databaseURL: "https://nodetruck.firebaseio.com",
+      projectId: "nodetruck",
+      storageBucket: "nodetruck.appspot.com",
+      messagingSenderId: "620840878358"
+    };
+    firebase.initializeApp(config);
 
+  </script>
+  <script>
+    function playSound(soundName, action) {
+      // noinspection JSUnresolvedVariable
+      let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+      let xhr2 = new XMLHttpRequest();
+      xhr2.open('GET', `/assets/sounds/${soundName}.mp3`);
+      xhr2.responseType = 'arraybuffer';
+      xhr2.addEventListener('load', () => {
+        let playsound2 = (audioBuffer2) => {
+          let source2 = audioCtx.createBufferSource();
+          source2.buffer = audioBuffer2;
+          source2.connect(audioCtx.destination);
+          source2.loop = false;
+          source2.start();
+        };
+        audioCtx.decodeAudioData(xhr2.response).then(playsound2);
+      });
+      xhr2.send();
+    }
+
+    window.addEventListener('load', () => {
+      // noinspection JSUnresolvedVariable
+      let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', '/assets/sounds/idle.mp3');
+      xhr.responseType = 'arraybuffer';
+      xhr.addEventListener('load', () => {
+        let playsound = (audioBuffer) => {
+          let source = audioCtx.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(audioCtx.destination);
+          source.loop = false;
+          source.start();
+
+          setTimeout(function () {
+            let t = document.createElement('p');
+            t.appendChild(document.createTextNode((new Date()).toLocaleString() + ': Sound played'));
+            //document.querySelector('.output').appendChild(t);
+            playsound(audioBuffer);
+          }, 9000);
+        };
+
+        audioCtx.decodeAudioData(xhr.response).then(playsound);
+      });
+      xhr.send();
+
+      const hornRef = firebase.database().ref('horn/status');
+      hornRef.on('value', (snapshot) => {
+        console.log('horn status: ', snapshot.val());
+        if (snapshot.val() === 'on') {
+          this.playSound('horn', 'start');
+        }
+      });
+      const moveRef = firebase.database().ref('move_orders/move');
+      moveRef.on('value', (snapshot) => {
+        this.movAction = snapshot.val();
+        console.log('move: ', snapshot.val());
+        if (snapshot.val() === 'retroceder') {
+          this.playSound('reverse', 'start');
+        }
+        if (snapshot.val() === 'parar') {
+          //this.playSound('idle','start');
+        }
+        if (snapshot.val() === 'avanzar') {
+          this.playSound('move-front', 'start');
+        }
+      });
+    });
+
+  </script>
 </body>
+
 </html>

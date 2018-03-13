@@ -17,7 +17,7 @@ export class AppHome {
         </ion-header>
 
         <ion-content>
-          <firebase-sounds></firebase-sounds>
+
         </ion-content>
       </ion-page>
     );
